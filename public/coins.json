@@ -1,0 +1,15 @@
+[
+  {
+    "id": "in-1",
+    "country": "India",
+    "denomination": "1 Rupee",
+    "year": 1992,
+    "frontImage": "/assets/india_1r_front.png",
+    "backImage": "/assets/india_1r_back.png",
+    "Context": "Issued after economic reforms.",
+    "coordinates": [
+      20.5937,
+      78.9629
+    ]
+  }
+]
