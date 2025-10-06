@@ -1,47 +1,87 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
+import './CoinDetailModal.css'; // Make sure you have this CSS file
 
 Modal.setAppElement('#root');
 
-const imgStyle = {
-  width: '45%',
-  height: '180px',
-  objectFit: 'contain',
-  margin: '0 2%',
-  border: '1px solid #eee',
-  borderRadius: '6px',
-  background: '#fafafa',
+const handleImageError = (e) => {
+  e.target.onerror = null;
+  e.target.src = `https://placehold.co/200x200/e0e7ff/2a2a2a?text=Coin`;
 };
 
-const CoinDetailModal = ({ coin, onClose }) => (
-  <Modal
-    isOpen={!!coin}
-    onRequestClose={onClose}
-    contentLabel="Coin Details"
-    style={{
-      content: {
-        maxWidth: '500px',
-        margin: 'auto',
-        borderRadius: '10px',
-        padding: '2rem',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.15)'
-      },
-      overlay: { zIndex: 1000, background: 'rgba(0,0,0,0.3)' }
-    }}
-  >
-    {coin && (
-      <>
-        <h2 style={{marginBottom: '1rem'}}>{coin.denomination} ({coin.year})</h2>
-        <div style={{display: 'flex', justifyContent: 'center', marginBottom: '1rem'}}>
-          <img src={coin.frontImage} alt="Front" style={imgStyle} />
-          <img src={coin.backImage} alt="Back" style={imgStyle} />
+const CoinDetailModal = ({ coin, onClose }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  if (!coin) {
+    return null;
+  }
+  
+  const getImagePath = (imagePath) => {
+    if (!imagePath) return `https://placehold.co/200x200/e0e7ff/2a2a2a?text=No+Image`;
+    try {
+      return require(`../assets/${imagePath.split('/').pop()}`);
+    } catch (e) {
+      return `https://placehold.co/200x200/e0e7ff/2a2a2a?text=Coin`;
+    }
+  };
+
+  const renderContext = () => {
+    if (Array.isArray(coin.Context)) {
+      return (
+        <ul>
+          {coin.Context.map((fact, index) => <li key={index}>{fact}</li>)}
+        </ul>
+      );
+    }
+    return <p>{coin.Context}</p>;
+  };
+
+  return (
+    <Modal
+      isOpen={!!coin}
+      onRequestClose={onClose}
+      contentLabel="Coin Details"
+      className="coin-modal"
+      overlayClassName="coin-modal-overlay"
+    >
+      <div className="modal-content">
+        <button onClick={onClose} className="close-button">&times;</button>
+        
+        <h2>{coin.denomination} ({coin.year})</h2>
+
+        <div className="coin-flipper" onClick={() => setIsFlipped(!isFlipped)}>
+          <div className={`coin ${isFlipped ? 'flipped' : ''}`}>
+            <div className="coin-face front">
+              <img src={getImagePath(coin.frontImage)} alt={`${coin.denomination} - Front`} onError={handleImageError} />
+            </div>
+            <div className="coin-face back">
+              <img src={getImagePath(coin.backImage)} alt={`${coin.denomination} - Back`} onError={handleImageError} />
+            </div>
+          </div>
         </div>
-        <div style={{marginBottom: '1rem'}}><strong>Country:</strong> {coin.country}</div>
-        <div style={{marginBottom: '1rem'}}><strong>Historical Context:</strong> {coin.Context || coin.historicalContext}</div>
-        <button onClick={onClose} style={{marginTop: '1rem'}}>Close</button>
-      </>
-    )}
-  </Modal>
-);
+        <p className="flip-instruction">Click coin to flip</p>
+
+        <div className="details-grid">
+          <div className="detail-group-main">
+            <p><strong>Country:</strong> {coin.country}</p>
+            <div><strong>Context:</strong> {renderContext()}</div>
+          </div>
+          <div className="detail-group-specs">
+            <p><strong>Material:</strong> {coin.material || 'N/A'}</p>
+            <p><strong>Weight:</strong> {coin.weight || 'N/A'}</p>
+            <p><strong>Diameter:</strong> {coin.diameter || 'N/A'}</p>
+            <p><strong>Shape:</strong> {coin.shape || 'N/A'}</p>
+            <p><strong>Mint:</strong> {coin.mint || 'N/A'}</p>
+            <p><strong>Edge:</strong> {coin.edge || 'N/A'}</p>
+          </div>
+          <div className="detail-group-count">
+            <p><strong>In Collection:</strong></p>
+            <p className="count-number">{coin.count || 0}</p>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  );
+};
 
 export default CoinDetailModal;

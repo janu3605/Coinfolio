@@ -5,10 +5,33 @@ import { MeshPhongMaterial, CanvasTexture, SpriteMaterial, Sprite } from 'three'
 const WORLD_GEOJSON_URL =
   'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
 
+const countryColors = {
+  'India': '#FF9933', // Saffron
+  'UAE': '#00732F',   // Green
+  'Uganda': '#FCDC04', // Yellow
+  'Kenya': '#000000',   // Black
+  'Zambia': '#198A46', // Green
+  'Botswana': '#75AADB', // Light Blue
+  'South Africa': '#007749', // Green
+  'Malawi': '#CE1126', // Red
+  'Tanzania': '#1EB53A', // Green
+  'Mozambique': '#000000', // Black
+  'USA': '#3C3B6E',   // Old Glory Blue
+  'United Kingdom': '#CF142B', // Red
+  'Spain': '#FABD00', // Yellow
+  'Kuwait': '#007A3D', // Green
+  'Malaysia': '#FCBF1E', // Yellow
+  'Sri Lanka': '#FFD700', // Gold
+  'Nepal': '#DC143C', // Crimson
+  'Thailand': '#2E2A4D', // Blue
+  'Pakistan': '#006643', // Green
+  'default': '#6c757d' // A default gray color
+};
+
 function createGradientCanvas() {
   const canvas = document.createElement('canvas');
-  canvas.width = 128;
-  canvas.height = 128;
+  canvas.width = 64;
+  canvas.height = 64;
   const ctx = canvas.getContext('2d');
 
   const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
@@ -22,7 +45,7 @@ function createGradientCanvas() {
 
 /* ---- BLACK DOT SPRITE (pointer) ---- */
 function createCircleCanvas() {
-  const size = 64;
+  const size = 256;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
@@ -31,7 +54,7 @@ function createCircleCanvas() {
   ctx.imageSmoothingEnabled = true;
   ctx.beginPath();
   ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
-  ctx.fillStyle = '#000000'; 
+  ctx.fillStyle = '#000000';
   ctx.fill();
   return canvas;
 }
@@ -111,8 +134,8 @@ const Globe = ({ coins, onCountrySelect }) => {
         pointsData={markers}
         pointLat={d => d.lat}
         pointLng={d => d.lng}
-        pointAltitude={() => 0.01}            
-        pointColor={() => '#000000'}       
+        pointAltitude={() => 0.01}
+        pointColor={() => '#d7631fff'}
         pointThreeObject={pointSpriteFactory}
 
         onPointClick={d => onCountrySelect(d.country)}
