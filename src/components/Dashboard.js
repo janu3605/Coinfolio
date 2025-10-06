@@ -1,6 +1,7 @@
 import React from 'react';
 import CoinGallery from './CoinGallery';
 import SearchBar from './SearchBar';
+import AnimatedNumber from './AnimatedNumber';
 
 const dashboardStyle = {
   padding: '2rem',
@@ -36,18 +37,22 @@ const Dashboard = ({ stats, coins, onCoinSelect, search, setSearch, onBack }) =>
   return (
     <div style={dashboardStyle}>
       <button onClick={onBack} style={{ marginBottom: '1rem' }}>Back to Globe</button>
-      
+
       <div style={statsContainerStyle}>
         <div style={statBoxStyle}>
-          <div style={statValueStyle}>{stats.totalCoins}</div>
+          <div style={statValueStyle}>
+            <AnimatedNumber value={stats.totalCoins} />
+          </div>
           <div style={statLabelStyle}>Total Coins</div>
         </div>
         <div style={statBoxStyle}>
-          <div style={statValueStyle}>{stats.uniqueCountries}</div>
+          <div style={statValueStyle}>
+            <AnimatedNumber value={stats.uniqueCountries}/>
+          </div>
           <div style={statLabelStyle}>Unique Countries</div>
         </div>
       </div>
-      
+
       <SearchBar search={search} setSearch={setSearch} />
       <CoinGallery coins={coins} onCoinSelect={onCoinSelect} />
     </div>
