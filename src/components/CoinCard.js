@@ -24,12 +24,7 @@ const handleImageError = (e) => {
 };
 
 const CoinCard = ({ coin, onClick }) => {
-  let imageUrl;
-  try {
-    imageUrl = require(`../assets/${coin.frontImage.split('/').pop()}`);
-  } catch (e) {
-    imageUrl = `https://placehold.co/200x200/e0e7ff/2a2a2a?text=Coin`;
-  }
+  const imageUrl = process.env.PUBLIC_URL + coin.frontImage;
 
   return (
     <div 
@@ -51,4 +46,5 @@ const CoinCard = ({ coin, onClick }) => {
   );
 };
 
-export default CoinCard;
+// Memoize the component to prevent re-renders if props haven't changed
+export default React.memo(CoinCard);

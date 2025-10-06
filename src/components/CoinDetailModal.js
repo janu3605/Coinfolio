@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import './CoinDetailModal.css'; // Make sure you have this CSS file
+import './CoinDetailModal.css';
 
 Modal.setAppElement('#root');
 
@@ -18,11 +18,8 @@ const CoinDetailModal = ({ coin, onClose }) => {
   
   const getImagePath = (imagePath) => {
     if (!imagePath) return `https://placehold.co/200x200/e0e7ff/2a2a2a?text=No+Image`;
-    try {
-      return require(`../assets/${imagePath.split('/').pop()}`);
-    } catch (e) {
-      return `https://placehold.co/200x200/e0e7ff/2a2a2a?text=Coin`;
-    }
+    // Directly construct the path to the public folder
+    return process.env.PUBLIC_URL + imagePath;
   };
 
   const renderContext = () => {
