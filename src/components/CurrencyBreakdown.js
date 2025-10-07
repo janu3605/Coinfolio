@@ -9,6 +9,20 @@ const currencyData = [
   { currency: 'EUR', name: 'Euro', flag: '🇪🇺', rate: 90.82 },
   { currency: 'GBP', name: 'British Pound', flag: '🇬🇧', rate: 105.25 },
   { currency: 'AED', name: 'UAE Dirham', flag: '🇦🇪', rate: 22.73 },
+  { currency: 'KES', name: 'Kenyan Shilling', flag: '🇰🇪', rate: 0.65 },
+  { currency: 'UGX', name: 'Ugandan Shilling', flag: '🇺🇬', rate: 0.022 },
+  { currency: 'ZAR', name: 'South African Rand', flag: '🇿🇦', rate: 4.50 },
+  { currency: 'ZMW', name: 'Zambian Kwacha', flag: '🇿🇲', rate: 3.30 },
+  { currency: 'BWP', name: 'Botswana Pula', flag: '🇧🇼', rate: 6.05 },
+  { currency: 'MWK', name: 'Malawian Kwacha', flag: '🇲🇼', rate: 0.048 },
+  { currency: 'TZS', name: 'Tanzanian Shilling', flag: '🇹🇿', rate: 0.032 },
+  { currency: 'MZN', name: 'Mozambican Metical', flag: '🇲🇿', rate: 1.30 },
+  { currency: 'KWD', name: 'Kuwaiti Dinar', flag: '🇰🇼', rate: 272.50 },
+  { currency: 'MYR', name: 'Malaysian Ringgit', flag: '🇲🇾', rate: 17.75 },
+  { currency: 'LKR', name: 'Sri Lankan Rupee', flag: '🇱🇰', rate: 0.28 },
+  { currency: 'NPR', name: 'Nepalese Rupee', flag: '🇳🇵', rate: 0.62 },
+  { currency: 'THB', name: 'Thai Baht', flag: '🇹🇭', rate: 2.28 },
+  { currency: 'PKR', name: 'Pakistani Rupee', flag: '🇵🇰', rate: 0.30 },
 ];
 
 const CurrencyBreakdown = ({ coinCountsByCurrency }) => {
@@ -19,10 +33,11 @@ const CurrencyBreakdown = ({ coinCountsByCurrency }) => {
       setCurrentIndex(prevIndex => (prevIndex + 1) % currencyData.length);
     }, 4000); // Cycle every 4 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
 
   const currentCurrency = currencyData[currentIndex];
+  // The || 0 here is a fallback in case a currency is in the ticker but not yet in the collection
   const coinCount = coinCountsByCurrency[currentCurrency.currency] || 0;
 
   return (
@@ -45,3 +60,4 @@ const CurrencyBreakdown = ({ coinCountsByCurrency }) => {
 };
 
 export default CurrencyBreakdown;
+

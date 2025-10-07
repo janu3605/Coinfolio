@@ -27,6 +27,7 @@ button {
   cursor: pointer;
   transition: 0.2s;
 }
+
 button:hover {
   background: #444;
 }
@@ -99,12 +100,14 @@ input[type="text"]:focus {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-/* .globe-ui-overlay h1 {
-  margin-top: 0;
+.globe-ui-overlay h1 {
+  font-family: 'Segoe UI', sans-serif;
   font-size: 3rem;
-  letter-spacing: 1px;
-  color: #f1f5f9;
-} */
+  color: #1b2631;
+  font-weight: 1000;
+  letter-spacing: 2px;
+  margin-top: 0;
+}
 
 .globe-ui-overlay p {
   font-size: 1.2rem;
@@ -116,7 +119,7 @@ input[type="text"]:focus {
   font-size: 1.1rem;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
-   /* background: #4f46e5; // A more vibrant color */
+  /* background: #4f46e5; // A more vibrant color */
   box-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
 }
 
