@@ -151,7 +151,7 @@ function App() {
       case 'country':
         return (
           <>
-            <h1>Coinfolio</h1>
+            {/* <h1 className="background-title">COINFOLIO</h1> */}
             <h2>Coins from {selectedCountry}</h2>
             <button onClick={handleBackToGlobe} style={{ margin: '1rem' }}>Back to Globe</button>
             <SearchBar search={search} setSearch={setSearch} />
@@ -161,7 +161,7 @@ function App() {
       case 'dashboard':
         return (
           <>
-            <h1>Coinfolio</h1>
+            {/* <h1>Coinfolio</h1> */}
             <Dashboard
               stats={collectionStats}
               coins={filteredCoins}
@@ -230,7 +230,7 @@ function App() {
 
   return (
     <div className="App">
-      {viewMode !== 'globe' && <h1>Coinfolio</h1>}
+      {viewMode !== 'globe'}
       {renderContent()}
       <CoinDetailModal coin={selectedCoin} onClose={handleCloseModal} />
     </div>

@@ -1,5 +1,5 @@
 body {
-  background: #f6f8fa;
+  background: #2f416a;
   margin: 0;
   font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
 }
@@ -7,13 +7,13 @@ body {
 .App {
   text-align: center;
   min-height: 100vh;
-  background: #f6f8fa;
+  background: #2f416a;
 }
 
 h1 {
   font-size: 2.5rem;
   margin: 2rem 0 1rem 0;
-  color: #222;
+  color: #989898;
   letter-spacing: 1px;
 }
 
@@ -151,4 +151,137 @@ input[type="text"]:focus {
   font-family: "Rubik 80s Fade", system-ui;
   font-weight: 400;
   font-style: normal;
+}
+
+
+/* --- Dashboard & Gallery View --- */
+.dashboard-view {
+  padding: 2rem 5vw;
+}
+
+.dashboard-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stat-box {
+  background: #1f2937;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  text-align: center;
+}
+
+.stat-box-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #f1f5f9;
+}
+
+.stat-box-label {
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+.coin-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+/* --- Search Bar --- */
+.search-bar-container {
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.search-bar-input {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background-color: #1f2937;
+  color: #f1f5f9;
+  font-size: 1rem;
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+}
+
+.search-bar-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.5);
+}
+
+/* --- Coin Card --- */
+.coin-card {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.coin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border-color: #4f46e5;
+}
+
+.coin-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+.coin-card-denom {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.coin-card-year {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+/* Globe button styles (moved from GlobeButton.js) */
+.globe-button {
+  position: absolute;
+  top: 2rem;
+  right: 3rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 100; /* Ensure it's above other content */
+  filter: drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.4));
+}
+
+.globe-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.globe-button:hover .globe-icon-wrapper {
+  transform: scale(1.15) rotate(15deg);
+}
+
+.globe-sphere {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  /* This gradient creates the 3D shading effect */
+  background: radial-gradient(circle at 30% 30%, #a7c5ff, #3c3b6e 90%);
+  box-shadow: inset -8px -8px 20px rgba(0,0,0,0.5), 
+              inset 8px 8px 15px rgba(255, 255, 255, 0.2);
+  position: absolute;
 }

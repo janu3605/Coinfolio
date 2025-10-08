@@ -1,28 +1,30 @@
-/* Modal Styling */
-.coin-modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  padding: 2rem 2.5rem;
-  border-radius: 12px;
-  max-width: 600px;
-  width: 90%;
-  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
-  outline: none;
-}
-
+/* Modal Overlay & Container */
 .coin-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coin-modal {
+  position: relative;
+  background: #1f2937;
+  padding: 2.5rem;
+  border-radius: 16px;
+  max-width: 650px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid #374151;
+  color: #cbd5e1;
+  outline: none;
 }
 
 .modal-content {
@@ -30,21 +32,26 @@
 }
 
 .modal-content h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #333;
+  font-family: 'Orbitron', sans-serif;
+  margin: 0 0 1rem;
+  color: #f1f5f9;
 }
 
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 15px;
+  right: 20px;
   background: none;
   border: none;
-  font-size: 2rem;
-  color: #aaa;
+  font-size: 2.5rem;
+  color: #94a3b8;
   cursor: pointer;
   line-height: 1;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: #fff;
 }
 
 /* Coin Flip Animation */
@@ -52,7 +59,7 @@
   perspective: 1000px;
   width: 200px;
   height: 200px;
-  margin: 0 auto;
+  margin: 1.5rem auto;
   cursor: pointer;
 }
 
@@ -82,8 +89,8 @@
   max-width: 100%;
   max-height: 100%;
   border-radius: 50%;
-  background: #f0f2f5;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  background: #374151;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .coin-face.back {
@@ -91,44 +98,46 @@
 }
 
 .flip-instruction {
-  font-size: 0.8rem;
-  color: #888;
-  margin-top: 0.5rem;
-  margin-bottom: 1.5rem;
+  font-size: 0.6rem;
+  color: #94a3b864;
+  margin-top: -0.5rem;
+  margin-bottom: 2rem;
+  font-family: 'Press Start 2P';
 }
 
 /* Details Grid Layout */
 .details-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem 2rem;
+  gap: 1.5rem 2.5rem;
   text-align: left;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+}
+
+.detail-group {
+  padding-top: 1.5rem;
+  border-top: 1px solid #374151;
+}
+
+.detail-group p,
+.detail-group div {
+  margin: 0.6rem 0;
+  font-size: 1rem;
+}
+.detail-group p strong,
+.detail-group div strong {
+  color: #94a3b8;
+  margin-right: 0.5rem;
 }
 
 .detail-group-main {
-  grid-column: 1 / -1; /* Span both columns */
-}
-
-.detail-group-specs,
-.detail-group-count,
-.detail-group-main {
-  border-top: 1px solid #eee;
-  padding-top: 1rem;
-}
-
-.detail-group-specs p,
-.detail-group-main p {
-  margin: 0.5rem 0;
-}
-
-.detail-group-count {
-  text-align: center;
+  grid-column: 1 / -1;
 }
 
 .count-number {
-  font-size: 2rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
   font-weight: bold;
-  color: #2a2a2a;
+  color: #f1f5f9;
   margin-top: 0.25rem;
 }
