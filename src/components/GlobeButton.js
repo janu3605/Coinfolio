@@ -1,13 +1,16 @@
 import React from 'react';
 
 const GlobeButton = ({ onClick }) => {
-  return (
-    <button className="globe-button" onClick={onClick} title="Back to Globe">
-      <div className="globe-icon-wrapper">
-        <div className="globe-sphere" />
-      </div>
-    </button>
-  );
+    return (
+        <div>
+            <button className="globe-button" onClick={onClick}>
+                <div className="globe-icon-wrapper">
+                    <div className="globe-sphere" />
+                </div>
+            </button>
+            <p className='gb'>back to globe</p>
+        </div>
+    );
 };
 
 export default GlobeButton;

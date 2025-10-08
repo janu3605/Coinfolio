@@ -7,6 +7,7 @@ import SearchBar from './components/SearchBar';
 import Dashboard from './components/Dashboard';
 import AnimatedNumber from './components/AnimatedNumber';
 import CurrencyBreakdown from './components/CurrencyBreakdown';
+import GlobeButton from './components/GlobeButton'; // Assuming GlobeButton is used elsewhere
 
 const countryToContinent = {
   'India': 'Asia', 'UAE': 'Asia', 'Uganda': 'Africa', 'Kenya': 'Africa',
@@ -53,7 +54,6 @@ function App() {
         console.error("Failed to fetch coins:", error);
         setIsLoading(false);
       });
-
     setFunFact(funFacts[Math.floor(Math.random() * funFacts.length)]);
   }, []);
 
@@ -64,83 +64,64 @@ function App() {
     } else {
       setStatsAnimationReady(false);
     }
-  }, [isLoading]);
-  
-  const { collectionStats, coinCountsByCurrency } = useMemo(() => {
-    if (coins.length === 0) {
-      return { 
-        collectionStats: { totalCoins: 0, uniqueCountries: 0, uniqueContinents: 0 },
-        coinCountsByCurrency: {}
-      };
-    }
-
-    const totalCoins = coins.reduce((sum, coin) => sum + (coin.count || 0), 0);
-    const uniqueCountries = new Set(coins.map(coin => coin.country)).size;
-    
-    const continentSet = new Set();
-    const countsByCurrency = {};
-
-    coins.forEach(coin => {
-      const continent = countryToContinent[coin.country];
-      if (continent) continentSet.add(continent);
-
-      const currency = countryToCurrency[coin.country];
-      if (currency) {
-          if (!countsByCurrency[currency]) {
-              countsByCurrency[currency] = 0;
-          }
-          countsByCurrency[currency] += coin.count || 0;
-      }
-    });
-    
-    const uniqueContinents = continentSet.size;
-
-    return { 
-      collectionStats: { totalCoins, uniqueCountries, uniqueContinents },
-      coinCountsByCurrency: countsByCurrency
-    };
-  }, [coins]);
+  }, [isLoading, viewMode]);
 
   const filteredCoins = useMemo(() => {
     let sourceCoins = coins;
-    if (viewMode === 'country' && selectedCountry) {
-      sourceCoins = coins.filter(coin => coin.country === selectedCountry);
+    if (selectedCountry) {
+        sourceCoins = coins.filter(coin => coin.country === selectedCountry);
     }
+    
     if (search) {
       const s = search.toLowerCase();
       return sourceCoins.filter(coin =>
-        coin.country.toLowerCase().includes(s) ||
-        String(coin.year).includes(s) ||
-        coin.denomination.toLowerCase().includes(s)
+        coin.denomination.toLowerCase().includes(s) ||
+        String(coin.year).includes(s) || 
+        (selectedCountry ? false : coin.country.toLowerCase().includes(s))
       );
     }
+    
     return sourceCoins;
-  }, [search, selectedCountry, coins, viewMode]);
+  }, [search, selectedCountry, coins]);
+
+  const coinCountsByCurrency = useMemo(() => {
+    if (!coins.length) return {};
+    return coins.reduce((acc, coin) => {
+      const currency = countryToCurrency[coin.country];
+      if (currency) {
+        acc[currency] = (acc[currency] || 0) + coin.count;
+      }
+      return acc;
+    }, {});
+  }, [coins]);
+
+  const collectionStats = useMemo(() => {
+    const totalCoins = coins.reduce((sum, coin) => sum + (coin.count || 0), 0);
+    const uniqueCountries = new Set(coins.map(coin => coin.country)).size;
+    const continentSet = new Set(coins.map(coin => countryToContinent[coin.country]).filter(Boolean));
+    return { totalCoins, uniqueCountries, uniqueContinents: continentSet.size };
+  }, [coins]);
 
   const handleCountrySelect = country => {
     setSelectedCountry(country);
-    setViewMode('country');
-    setSearch('');
-  };
-
-  const handleCoinSelect = coin => {
-    setSelectedCoin(coin);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedCoin(null);
-  };
-
-  const handleBackToGlobe = () => {
-    setSelectedCountry(null);
-    setViewMode('globe');
+    setViewMode('dashboard');
     setSearch('');
   };
 
   const handleShowDashboard = () => {
+    setSelectedCountry(null);
     setViewMode('dashboard');
     setSearch('');
   };
+  
+  const handleBackToGlobe = () => {
+    setViewMode('globe');
+    setSelectedCountry(null);
+    setSearch('');
+  };
+
+  const handleCoinSelect = coin => setSelectedCoin(coin);
+  const handleCloseModal = () => setSelectedCoin(null);
 
   if (isLoading) {
     return <div className="loading-screen"><h1>Loading Collection...</h1></div>;
@@ -148,29 +129,17 @@ function App() {
 
   const renderContent = () => {
     switch (viewMode) {
-      case 'country':
-        return (
-          <>
-            {/* <h1 className="background-title">COINFOLIO</h1> */}
-            <h2>Coins from {selectedCountry}</h2>
-            <button onClick={handleBackToGlobe} style={{ margin: '1rem' }}>Back to Globe</button>
-            <SearchBar search={search} setSearch={setSearch} />
-            <CoinGallery coins={filteredCoins} onCoinSelect={handleCoinSelect} />
-          </>
-        );
       case 'dashboard':
         return (
-          <>
-            {/* <h1>Coinfolio</h1> */}
-            <Dashboard
-              stats={collectionStats}
-              coins={filteredCoins}
-              onCoinSelect={handleCoinSelect}
-              search={search}
-              setSearch={setSearch}
-              onBack={handleBackToGlobe}
-            />
-          </>
+          <Dashboard
+            stats={collectionStats}
+            coins={filteredCoins}
+            onCoinSelect={handleCoinSelect}
+            search={search}
+            setSearch={setSearch}
+            onBack={handleBackToGlobe}
+            selectedCountry={selectedCountry}
+          />
         );
       case 'globe':
       default:
@@ -178,50 +147,39 @@ function App() {
           <div className="globe-view">
             <h1 className="background-title">COINFOLIO</h1>
             <div className="globe-ui-overlay">
-              <h1>COINFOLIO</h1>
+              <h1>Coinfolio</h1>
               <p>A visual journey through your personal coin collection. Click a marker to explore a country or view the entire collection.</p>
-
               <div className="globe-stats">
                 <div className="stat-item">
-                  <i className="material-symbols-outlined">monetization_on</i>
+                  <i className="material-symbols-outlined">ev_shadow</i>
                   <div>
-                    <div className="stat-item-value">
-                      <AnimatedNumber value={statsAnimationReady ? collectionStats.totalCoins : 0} duration={1000} />
-                    </div>
+                    <div className="stat-item-value"><AnimatedNumber value={statsAnimationReady ? collectionStats.totalCoins : 0} duration={1000} /></div>
                     <div className="stat-item-label">Total Coins</div>
                   </div>
                 </div>
                 <div className="stat-item">
                   <i className="material-symbols-outlined">flag</i>
                   <div>
-                    <div className="stat-item-value">
-                      <AnimatedNumber value={statsAnimationReady ? collectionStats.uniqueCountries : 0} duration={1000} />
-                    </div>
+                    <div className="stat-item-value"><AnimatedNumber value={statsAnimationReady ? collectionStats.uniqueCountries : 0} duration={1000} /></div>
                     <div className="stat-item-label">Countries</div>
                   </div>
                 </div>
                 <div className="stat-item">
-                  <i className="material-symbols-outlined">public</i>
+                  <i className="material-symbols-outlined">globe</i>
                   <div>
-                    <div className="stat-item-value">
-                      <AnimatedNumber value={statsAnimationReady ? collectionStats.uniqueContinents : 0} duration={1000} />
-                    </div>
+                    <div className="stat-item-value"><AnimatedNumber value={statsAnimationReady ? collectionStats.uniqueContinents : 0} duration={1000} /></div>
                     <div className="stat-item-label">Continents</div>
                   </div>
                 </div>
               </div>
-
               <div className="did-you-know">
                 <h3>Did you know?</h3>
                 <p>{funFact}</p>
               </div>
-
               <button onClick={handleShowDashboard}>Explore Full Collection</button>
             </div>
-
-            {/* Render the new component and pass the calculated coin counts */}
-            <CurrencyBreakdown coinCountsByCurrency={coinCountsByCurrency || {}} />
-
+            {/* Pass the calculated data only when it's ready */}
+            <CurrencyBreakdown coinCounts={coinCountsByCurrency} isVisible={statsAnimationReady} />
             <Globe coins={coins} onCountrySelect={handleCountrySelect} />
           </div>
         );
@@ -230,7 +188,7 @@ function App() {
 
   return (
     <div className="App">
-      {viewMode !== 'globe'}
+      {viewMode !== 'globe' && <h1>Coinfolio</h1>}
       {renderContent()}
       <CoinDetailModal coin={selectedCoin} onClose={handleCloseModal} />
     </div>

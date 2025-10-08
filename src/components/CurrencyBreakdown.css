@@ -1,5 +1,5 @@
 /* Keyframe for the slide-in animation */
-/* @keyframes slideInUp {
+@keyframes slideInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -8,7 +8,7 @@
     opacity: 1;
     transform: translateY(0);
   }
-} */
+}
 
 .currency-breakdown-overlay {
   position: absolute;

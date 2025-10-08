@@ -1,11 +1,11 @@
 import React from 'react';
 
-const SearchBar = ({ search, setSearch }) => (
-  <div className="search-bar-container">
+const SearchBar = ({ search, setSearch, placeholder }) => (
+  <div className="search-bar-wrapper">
     <input
       type="text"
-      className="search-bar-input"
-      placeholder="Search by country, year, or denomination..."
+      className="search-bar"
+      placeholder={placeholder || "Search by country, year, or denomination..."}
       value={search}
       onChange={e => setSearch(e.target.value)}
     />
@@ -13,3 +13,4 @@ const SearchBar = ({ search, setSearch }) => (
 );
 
 export default SearchBar;
+

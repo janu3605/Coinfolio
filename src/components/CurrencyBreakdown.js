@@ -1,59 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import AnimatedNumber from './AnimatedNumber';
 import './CurrencyBreakdown.css';
+import AnimatedNumber from './AnimatedNumber';
 
-// Data for the currencies you want to feature in the ticker
-const currencyData = [
-  { currency: 'INR', name: 'Indian Rupee', flag: '🇮🇳', rate: 1.00 },
-  { currency: 'USD', name: 'US Dollar', flag: '🇺🇸', rate: 83.51 },
-  { currency: 'EUR', name: 'Euro', flag: '🇪🇺', rate: 90.82 },
-  { currency: 'GBP', name: 'British Pound', flag: '🇬🇧', rate: 105.25 },
-  { currency: 'AED', name: 'UAE Dirham', flag: '🇦🇪', rate: 22.73 },
-  { currency: 'KES', name: 'Kenyan Shilling', flag: '🇰🇪', rate: 0.65 },
-  { currency: 'UGX', name: 'Ugandan Shilling', flag: '🇺🇬', rate: 0.022 },
-  { currency: 'ZAR', name: 'South African Rand', flag: '🇿🇦', rate: 4.50 },
-  { currency: 'ZMW', name: 'Zambian Kwacha', flag: '🇿🇲', rate: 3.30 },
-  { currency: 'BWP', name: 'Botswana Pula', flag: '🇧🇼', rate: 6.05 },
-  { currency: 'MWK', name: 'Malawian Kwacha', flag: '🇲🇼', rate: 0.048 },
-  { currency: 'TZS', name: 'Tanzanian Shilling', flag: '🇹🇿', rate: 0.032 },
-  { currency: 'MZN', name: 'Mozambican Metical', flag: '🇲🇿', rate: 1.30 },
-  { currency: 'KWD', name: 'Kuwaiti Dinar', flag: '🇰🇼', rate: 272.50 },
-  { currency: 'MYR', name: 'Malaysian Ringgit', flag: '🇲🇾', rate: 17.75 },
-  { currency: 'LKR', name: 'Sri Lankan Rupee', flag: '🇱🇰', rate: 0.28 },
-  { currency: 'NPR', name: 'Nepalese Rupee', flag: '🇳🇵', rate: 0.62 },
-  { currency: 'THB', name: 'Thai Baht', flag: '🇹🇭', rate: 2.28 },
-  { currency: 'PKR', name: 'Pakistani Rupee', flag: '🇵🇰', rate: 0.30 },
-];
+const currencyData = {
+    'INR': { name: 'Indian Rupee', rate: 1.00, flag: '🇮🇳' },
+    'USD': { name: 'US Dollar', rate: 83.50, flag: '🇺🇸' },
+    'EUR': { name: 'Euro', rate: 90.80, flag: '🇪🇺' },
+    'GBP': { name: 'British Pound', rate: 105.20, flag: '🇬🇧' },
+    'AED': { name: 'UAE Dirham', rate: 22.70, flag: '🇦🇪' },
+    'UGX': { name: 'Ugandan Shilling', rate: 0.022, flag: '🇺🇬' },
+    'KES': { name: 'Kenyan Shilling', rate: 0.64, flag: '🇰🇪' },
+    'ZMW': { name: 'Zambian Kwacha', rate: 3.25, flag: '🇿🇲' },
+    'BWP': { name: 'Botswana Pula', rate: 6.05, flag: '🇧🇼' },
+    'ZAR': { name: 'South African Rand', rate: 4.50, flag: '🇿🇦' },
+    'MWK': { name: 'Malawian Kwacha', rate: 0.048, flag: '🇲🇼' },
+    'TZS': { name: 'Tanzanian Shilling', rate: 0.032, flag: '🇹🇿' },
+    'MZN': { name: 'Mozambican Metical', rate: 1.30, flag: '🇲🇿' },
+    'KWD': { name: 'Kuwaiti Dinar', rate: 272.50, flag: '🇰🇼' },
+    'MYR': { name: 'Malaysian Ringgit', rate: 17.75, flag: '🇲🇾' },
+    'LKR': { name: 'Sri Lankan Rupee', rate: 0.28, flag: '🇱🇰' },
+    'NPR': { name: 'Nepalese Rupee', rate: 0.62, flag: '🇳🇵' },
+    'THB': { name: 'Thai Baht', rate: 2.28, flag: '🇹🇭' },
+    'PKR': { name: 'Pakistani Rupee', rate: 0.30, flag: '🇵🇰' }
+};
 
-const CurrencyBreakdown = ({ coinCountsByCurrency }) => {
+const currencies = Object.keys(currencyData);
+
+const CurrencyBreakdown = ({ coinCounts, isVisible }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    if (!isVisible) return;
     const interval = setInterval(() => {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % currencyData.length);
-    }, 4000); // Cycle every 4 seconds
+      setCurrentIndex(prevIndex => (prevIndex + 1) % currencies.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [isVisible]);
 
-    return () => clearInterval(interval); // Cleanup on component unmount
-  }, []);
+  // Safeguard: Don't render if data is not ready
+  if (!isVisible || !coinCounts) {
+    return null;
+  }
 
-  const currentCurrency = currencyData[currentIndex];
-  // The || 0 here is a fallback in case a currency is in the ticker but not yet in the collection
-  const coinCount = coinCountsByCurrency[currentCurrency.currency] || 0;
+  const currency = currencies[currentIndex];
+  const data = currencyData[currency];
+  // Safeguard: Default to 0 if the currency is not in the collection
+  const count = coinCounts[currency] || 0;
 
   return (
-    <div className="currency-breakdown-overlay" key={currentIndex}>
-      <div className="currency-breakdown-header">
-        <span className="currency-flag">{currentCurrency.flag}</span>
-        <div className="currency-info">
-          <span className="currency-name">{currentCurrency.name}</span>
-          <span className="currency-rate">₹{currentCurrency.rate.toFixed(2)} / {currentCurrency.currency}</span>
-        </div>
+    <div className="currency-breakdown" key={currentIndex}>
+      <div className="breakdown-header">
+        <span className="breakdown-flag">{data.flag}</span>
+        <span className="breakdown-name">{data.name}</span>
       </div>
-      <div className="currency-breakdown-body">
-        <div className="collection-count-value">
-          <AnimatedNumber value={coinCount} duration={1000} />
+      <div className="breakdown-body">
+        <div className="breakdown-item">
+          <div className="breakdown-label">Value in INR</div>
+          <div className="breakdown-value">₹<AnimatedNumber value={data.rate} duration={500} /></div>
         </div>
-        <div className="collection-count-label">Coins in Collection</div>
+        <div className="breakdown-item">
+          <div className="breakdown-label">Coins in Collection</div>
+          <div className="breakdown-value"><AnimatedNumber value={count} duration={500} /></div>
+        </div>
       </div>
     </div>
   );
