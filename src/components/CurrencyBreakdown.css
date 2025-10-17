@@ -1,77 +1,71 @@
-/* Keyframe for the slide-in animation */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
+.currency-breakdown {
+  position: absolute;
+  bottom: 85px;
+  left: 30px;
+  width: 300px;
+  padding: 1.5rem;
+  background: rgba(26, 32, 53, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 2;
+  /* opacity: 1; */
+  /* transform: translateY(20px); */
+  /* animation: slideUpFadeIn 0.5s 1.5s ease-out forwards; */
+}
+
+/* @keyframes slideUpFadeIn {
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
+} */
 
-.currency-breakdown-overlay {
-  position: absolute;
-  bottom: 10vh;
-  left: 5vw;
-  z-index: 10;
-  width: 280px;
-  padding: 1.5rem;
-  background: rgba(17, 24, 39, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  animation: slideInUp 0.7s ease-out;
-}
-
-.currency-breakdown-header {
+.breakdown-header {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.currency-flag {
-  font-size: 2.5rem;
+.breakdown-flag {
+  font-size: 2rem;
   margin-right: 1rem;
-  line-height: 1;
+  flex-shrink: 0; /* Prevents the flag from shrinking */
 }
 
-.currency-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.currency-name {
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 600;
-  font-size: 1.1rem;
+.breakdown-name {
+  font-size: 1.6rem;
+  font-weight: 500;
   color: #e2e8f0;
+  white-space: nowrap; /* Prevents name from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.currency-rate {
-  font-size: 0.9rem;
-  color: #94a3b8;
+.breakdown-body {
+  display: flex;
+  justify-content: space-between;
 }
 
-.currency-breakdown-body {
+.breakdown-item {
   text-align: center;
+  flex: 1;
 }
 
-.collection-count-value {
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-  font-size: 2.5rem;
-  color: #f1f5f9;
-}
-
-.collection-count-label {
+.breakdown-label {
   font-size: 0.8rem;
   color: #94a3b8;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+}
+
+.breakdown-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.75rem;
+  color: #f1f5f9;
 }
 

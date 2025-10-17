@@ -8,7 +8,7 @@ const GlobeButton = ({ onClick }) => {
                     <div className="globe-sphere" />
                 </div>
             </button>
-            <p className='gb'>back to globe</p>
+            <p className='gb'>Back to Globe</p>
         </div>
     );
 };

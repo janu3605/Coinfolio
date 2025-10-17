@@ -18,11 +18,11 @@ const countryToContinent = {
 };
 
 const countryToCurrency = {
-    'India': 'INR', 'UAE': 'AED', 'Uganda': 'UGX', 'Kenya': 'KES',
-    'Zambia': 'ZMW', 'Botswana': 'BWP', 'South Africa': 'ZAR', 'Malawi': 'MWK',
-    'Tanzania': 'TZS', 'Mozambique': 'MZN', 'USA': 'USD', 'United Kingdom': 'GBP', 
-    'Spain': 'EUR', 'Kuwait': 'KWD', 'Malaysia': 'MYR', 'Sri Lanka': 'LKR',
-    'Nepal': 'NPR', 'Thailand': 'THB', 'Pakistan': 'PKR'
+  'India': 'INR', 'UAE': 'AED', 'Uganda': 'UGX', 'Kenya': 'KES',
+  'Zambia': 'ZMW', 'Botswana': 'BWP', 'South Africa': 'ZAR', 'Malawi': 'MWK',
+  'Tanzania': 'TZS', 'Mozambique': 'MZN', 'USA': 'USD', 'United Kingdom': 'GBP',
+  'Spain': 'EUR', 'Kuwait': 'KWD', 'Malaysia': 'MYR', 'Sri Lanka': 'LKR',
+  'Nepal': 'NPR', 'Thailand': 'THB', 'Pakistan': 'PKR'
 };
 
 const funFacts = [
@@ -69,18 +69,18 @@ function App() {
   const filteredCoins = useMemo(() => {
     let sourceCoins = coins;
     if (selectedCountry) {
-        sourceCoins = coins.filter(coin => coin.country === selectedCountry);
+      sourceCoins = coins.filter(coin => coin.country === selectedCountry);
     }
-    
+
     if (search) {
       const s = search.toLowerCase();
       return sourceCoins.filter(coin =>
         coin.denomination.toLowerCase().includes(s) ||
-        String(coin.year).includes(s) || 
+        String(coin.year).includes(s) ||
         (selectedCountry ? false : coin.country.toLowerCase().includes(s))
       );
     }
-    
+
     return sourceCoins;
   }, [search, selectedCountry, coins]);
 
@@ -113,7 +113,7 @@ function App() {
     setViewMode('dashboard');
     setSearch('');
   };
-  
+
   const handleBackToGlobe = () => {
     setViewMode('globe');
     setSelectedCountry(null);
@@ -131,15 +131,18 @@ function App() {
     switch (viewMode) {
       case 'dashboard':
         return (
-          <Dashboard
-            stats={collectionStats}
-            coins={filteredCoins}
-            onCoinSelect={handleCoinSelect}
-            search={search}
-            setSearch={setSearch}
-            onBack={handleBackToGlobe}
-            selectedCountry={selectedCountry}
-          />
+          <>
+            <h1>{selectedCountry ? `Coins from ${selectedCountry}` : 'Full Collection'}</h1>
+            <Dashboard
+              stats={collectionStats}
+              coins={filteredCoins}
+              onCoinSelect={handleCoinSelect}
+              search={search}
+              setSearch={setSearch}
+              onBack={handleBackToGlobe}
+              selectedCountry={selectedCountry}
+            />
+          </>
         );
       case 'globe':
       default:
@@ -186,9 +189,10 @@ function App() {
     }
   };
 
+
   return (
     <div className="App">
-      {viewMode !== 'globe' && <h1>Coinfolio</h1>}
+      {/* Title is now rendered inside the component */}
       {renderContent()}
       <CoinDetailModal coin={selectedCoin} onClose={handleCloseModal} />
     </div>

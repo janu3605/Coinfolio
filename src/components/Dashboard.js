@@ -1,13 +1,12 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import CoinGallery from './CoinGallery';
 import SearchBar from './SearchBar';
 import AnimatedNumber from './AnimatedNumber';
 import GlobeButton from './GlobeButton';
 
 const Dashboard = ({ stats, coins, onCoinSelect, search, setSearch, onBack, selectedCountry }) => {
-  // Calculate stats based on the coins passed to the dashboard.
-  // This is simpler and more direct.
-  const displayedStats = useMemo(() => {
+
+  const displayedStats = React.useMemo(() => {
     const total = coins.reduce((sum, coin) => sum + (coin.count || 0), 0);
     const countries = selectedCountry ? 1 : stats.uniqueCountries;
     return { totalCoins: total, uniqueCountries: countries };
@@ -17,7 +16,7 @@ const Dashboard = ({ stats, coins, onCoinSelect, search, setSearch, onBack, sele
     <div className="dashboard-view">
       <GlobeButton onClick={onBack} />
       
-      <h2>{selectedCountry ? `Coins from ${selectedCountry}` : 'Full Collection'}</h2>
+      {/* Title is now handled in App.js */}
       
       <div className="dashboard-stats">
         <div className="stat-box">
