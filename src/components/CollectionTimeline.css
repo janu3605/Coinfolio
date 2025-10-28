@@ -1,0 +1,83 @@
+.timeline-chart-container {
+  background-color: rgba(31, 41, 55, 0.7); /* Darker semi-transparent */
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+  /* margin-bottom: 2rem; Add space below
+   */
+   /* padding-bottom: 2rem; */
+  overflow: hidden; /* Ensure animation stays contained */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.timeline-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem; /* Slightly smaller */
+  color: #94a3b8;
+  margin: 0 0 1.5rem 0;
+  text-align: left;
+  letter-spacing: 1px;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 120px; /* Reduced height */
+  padding-left: 35px; /* More Space for Y-axis labels */
+  padding-bottom: 25px; /* More Space for X-axis labels */
+}
+
+.timeline-chart-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.timeline-chart-axes {
+  fill: none;
+  stroke: #4b5563; /* Slightly lighter axis */
+  stroke-width: 0.75; /* Thinner axis */
+}
+
+.timeline-chart-line {
+  fill: none;
+  stroke: #818cf8; /* Lighter Indigo */
+  stroke-width: 2; /* Slightly thinner line */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 2000; /* Increased length for more complex path */
+  stroke-dashoffset: 2000; /* Increased length for more complex path */
+  animation: drawLine 2.5s 0.3s cubic-bezier(0.65, 0, 0.35, 1) forwards; /* Smoother, delayed animation */
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --- Labels --- */
+.chart-label {
+  position: absolute;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem; /* Smaller labels */
+  color: #94a3b8;
+}
+
+.y-top {
+  top: -8px; /* Adjust vertical position */
+  left: 0;
+}
+
+.y-bottom {
+  bottom: 25px; /* Align with bottom axis */
+  left: 0;
+}
+
+.x-axis {
+  bottom: 0;
+  transform: translateX(-50%);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.55rem; /* Even smaller */
+}
+

@@ -141,3 +141,10 @@
   color: #f1f5f9;
   margin-top: 0.25rem;
 }
+
+
+.country-flag {
+  margin-right: 0.5rem; /* Space between flag and country name */
+  font-size: 1.2em; /* Slightly larger flag */
+  vertical-align: middle;
+}

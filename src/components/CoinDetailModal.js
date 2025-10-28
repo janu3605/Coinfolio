@@ -5,6 +5,7 @@ import { SoundManager } from './SoundManager'; // Import the SoundManager
 
 Modal.setAppElement('#root');
 
+
 const handleImageError = (e) => {
   e.target.onerror = null;
   e.target.src = `https://placehold.co/200x200/e0e7ff/2a2a2a?text=Coin`;
@@ -79,7 +80,7 @@ const CoinDetailModal = ({ coin, onClose }) => {
           </div>
           <div className="detail-group-count">
             <p><strong>In Collection:</strong></p>
-            <p className="count-number">{coin.count || 0}</p>
+            <p className="count-number">{coin.count || 0}<i>🪙</i> </p> 
           </div>
         </div>
       </div>

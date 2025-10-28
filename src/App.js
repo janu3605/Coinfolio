@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import AnimatedNumber from './components/AnimatedNumber';
 import CurrencyBreakdown from './components/CurrencyBreakdown';
 import { SoundManager } from './components/SoundManager'; // Import the SoundManager
+import CollectionTimeline from './components/CollectionTimeline';
 
 const countryToContinent = {
   'India': 'Asia', 'UAE': 'Asia', 'Uganda': 'Africa', 'Kenya': 'Africa',
@@ -205,9 +206,11 @@ function App() {
               </div>
               <button onClick={handleShowDashboard}>Explore Full Collection</button>
             </div>
-            {/* Pass the calculated data only when it's ready */}
+
+            <CollectionTimeline totalCoins={collectionStats.totalCoins} />
+
             <CurrencyBreakdown coinCounts={coinCountsByCurrency} isVisible={statsAnimationReady} />
-            <Globe coins={coins} onCountrySelect={handleCountrySelect} />
+            <Globe coins={coins} onCountrySelect={handleCountrySelect}/>
           </div>
         );
     }
