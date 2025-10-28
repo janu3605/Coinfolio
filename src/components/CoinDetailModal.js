@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './CoinDetailModal.css';
+import { SoundManager } from './SoundManager'; // Import the SoundManager
 
 Modal.setAppElement('#root');
 
@@ -18,8 +19,13 @@ const CoinDetailModal = ({ coin, onClose }) => {
   
   const getImagePath = (imagePath) => {
     if (!imagePath) return `https://placehold.co/200x200/e0e7ff/2a2a2a?text=No+Image`;
-    // Directly construct the path to the public folder
     return process.env.PUBLIC_URL + imagePath;
+  };
+
+  // Dedicated handler to ensure sound plays reliably
+  const handleFlip = () => {
+    setIsFlipped(prev => !prev);
+    SoundManager.playCoinFlip();
   };
 
   const renderContext = () => {
@@ -46,7 +52,7 @@ const CoinDetailModal = ({ coin, onClose }) => {
         
         <h2>{coin.denomination} ({coin.year})</h2>
 
-        <div className="coin-flipper" onClick={() => setIsFlipped(!isFlipped)}>
+        <div className="coin-flipper" onClick={handleFlip}>
           <div className={`coin ${isFlipped ? 'flipped' : ''}`}>
             <div className="coin-face front">
               <img src={getImagePath(coin.frontImage)} alt={`${coin.denomination} - Front`} onError={handleImageError} />
@@ -82,3 +88,4 @@ const CoinDetailModal = ({ coin, onClose }) => {
 };
 
 export default CoinDetailModal;
+

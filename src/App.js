@@ -7,7 +7,7 @@ import SearchBar from './components/SearchBar';
 import Dashboard from './components/Dashboard';
 import AnimatedNumber from './components/AnimatedNumber';
 import CurrencyBreakdown from './components/CurrencyBreakdown';
-import GlobeButton from './components/GlobeButton'; // Assuming GlobeButton is used elsewhere
+import { SoundManager } from './components/SoundManager'; // Import the SoundManager
 
 const countryToContinent = {
   'India': 'Asia', 'UAE': 'Asia', 'Uganda': 'Africa', 'Kenya': 'Africa',
@@ -18,11 +18,11 @@ const countryToContinent = {
 };
 
 const countryToCurrency = {
-  'India': 'INR', 'UAE': 'AED', 'Uganda': 'UGX', 'Kenya': 'KES',
-  'Zambia': 'ZMW', 'Botswana': 'BWP', 'South Africa': 'ZAR', 'Malawi': 'MWK',
-  'Tanzania': 'TZS', 'Mozambique': 'MZN', 'USA': 'USD', 'United Kingdom': 'GBP',
-  'Spain': 'EUR', 'Kuwait': 'KWD', 'Malaysia': 'MYR', 'Sri Lanka': 'LKR',
-  'Nepal': 'NPR', 'Thailand': 'THB', 'Pakistan': 'PKR'
+    'India': 'INR', 'UAE': 'AED', 'Uganda': 'UGX', 'Kenya': 'KES',
+    'Zambia': 'ZMW', 'Botswana': 'BWP', 'South Africa': 'ZAR', 'Malawi': 'MWK',
+    'Tanzania': 'TZS', 'Mozambique': 'MZN', 'USA': 'USD', 'United Kingdom': 'GBP', 
+    'Spain': 'EUR', 'Kuwait': 'KWD', 'Malaysia': 'MYR', 'Sri Lanka': 'LKR',
+    'Nepal': 'NPR', 'Thailand': 'THB', 'Pakistan': 'PKR'
 };
 
 const funFacts = [
@@ -59,7 +59,12 @@ function App() {
 
   useEffect(() => {
     if (!isLoading) {
-      const timer = setTimeout(() => setStatsAnimationReady(true), 1000);
+      const timer = setTimeout(() => {
+        setStatsAnimationReady(true);
+        if (viewMode === 'globe') {
+          SoundManager.playSwoosh();
+        }
+      }, 500); // A small delay to let the page settle
       return () => clearTimeout(timer);
     } else {
       setStatsAnimationReady(false);
@@ -131,18 +136,16 @@ function App() {
     switch (viewMode) {
       case 'dashboard':
         return (
-          <>
-            <h1>{selectedCountry ? `Coins from ${selectedCountry}` : 'Full Collection'}</h1>
-            <Dashboard
-              stats={collectionStats}
-              coins={filteredCoins}
-              onCoinSelect={handleCoinSelect}
-              search={search}
-              setSearch={setSearch}
-              onBack={handleBackToGlobe}
-              selectedCountry={selectedCountry}
-            />
-          </>
+          <Dashboard
+            title={selectedCountry ? `Coins from ${selectedCountry}` : 'Full Collection'}
+            stats={collectionStats}
+            coins={filteredCoins}
+            onCoinSelect={handleCoinSelect}
+            search={search}
+            setSearch={setSearch}
+            onBack={handleBackToGlobe}
+            selectedCountry={selectedCountry}
+          />
         );
       case 'globe':
       default:
@@ -156,21 +159,42 @@ function App() {
                 <div className="stat-item">
                   <i className="material-symbols-outlined">ev_shadow</i>
                   <div>
-                    <div className="stat-item-value"><AnimatedNumber value={statsAnimationReady ? collectionStats.totalCoins : 0} duration={1000} /></div>
+                    <div className="stat-item-value">
+                      <AnimatedNumber 
+                        value={statsAnimationReady ? collectionStats.totalCoins : 0} 
+                        duration={1000}
+                        onStart={SoundManager.playCountUp}
+                        onComplete={SoundManager.stopCountUp}
+                      />
+                    </div>
                     <div className="stat-item-label">Total Coins</div>
                   </div>
                 </div>
                 <div className="stat-item">
                   <i className="material-symbols-outlined">flag</i>
                   <div>
-                    <div className="stat-item-value"><AnimatedNumber value={statsAnimationReady ? collectionStats.uniqueCountries : 0} duration={1000} /></div>
+                    <div className="stat-item-value">
+                      <AnimatedNumber 
+                        value={statsAnimationReady ? collectionStats.uniqueCountries : 0} 
+                        duration={1000}
+                        onStart={SoundManager.playCountUp}
+                        onComplete={SoundManager.stopCountUp}
+                      />
+                    </div>
                     <div className="stat-item-label">Countries</div>
                   </div>
                 </div>
                 <div className="stat-item">
                   <i className="material-symbols-outlined">globe</i>
                   <div>
-                    <div className="stat-item-value"><AnimatedNumber value={statsAnimationReady ? collectionStats.uniqueContinents : 0} duration={1000} /></div>
+                    <div className="stat-item-value">
+                      <AnimatedNumber 
+                        value={statsAnimationReady ? collectionStats.uniqueContinents : 0} 
+                        duration={1000}
+                        onStart={SoundManager.playCountUp}
+                        onComplete={SoundManager.stopCountUp}
+                      />
+                    </div>
                     <div className="stat-item-label">Continents</div>
                   </div>
                 </div>
@@ -189,10 +213,8 @@ function App() {
     }
   };
 
-
   return (
     <div className="App">
-      {/* Title is now rendered inside the component */}
       {renderContent()}
       <CoinDetailModal coin={selectedCoin} onClose={handleCloseModal} />
     </div>

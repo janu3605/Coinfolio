@@ -5,47 +5,59 @@ import React, { useState, useEffect, useRef } from 'react';
  * @param {object} props - The component props.
  * @param {number} props.value - The final number to count up to.
  * @param {number} [props.duration=1500] - The duration of the animation in milliseconds.
+ * @param {Function} [props.onStart] - Callback function when animation starts.
+ * @param {Function} [props.onComplete] - Callback function when animation completes.
  */
-
-const AnimatedNumber = ({ value, duration = 1500 }) => {
+const AnimatedNumber = ({ value, duration = 1500, onStart, onComplete }) => {
   const [count, setCount] = useState(0);
-  const countRef = useRef(null);
+  const animationFrameRef = useRef(null);
+  const hasStarted = useRef(false);
 
   useEffect(() => {
-    const start = 0;
-    // Ensure value is a valid number, default to 0
-    const end = parseInt(value, 10) || 0;
+    const startValue = 0;
+    const endValue = parseInt(value, 10) || 0;
+    if (endValue === 0) return; // No animation needed for zero
+
     const startTime = performance.now();
+    hasStarted.current = false;
 
     const animate = (currentTime) => {
+      if (!hasStarted.current) {
+        if (onStart) onStart();
+        hasStarted.current = true;
+      }
+
       const elapsedTime = currentTime - startTime;
       const progress = Math.min(elapsedTime / duration, 1);
       
-      // Calculate the current value based on the progress
-      const currentVal = Math.floor(progress * (end - start) + start);
+      const currentVal = Math.floor(progress * (endValue - startValue) + startValue);
       setCount(currentVal);
 
-      // Continue the animation until it's done
       if (progress < 1) {
-        countRef.current = requestAnimationFrame(animate);
+        animationFrameRef.current = requestAnimationFrame(animate);
       } else {
-        setCount(end); // Ensure it ends on the exact value
+        setCount(endValue);
+        if (onComplete) {
+          onComplete();
+        }
       }
     };
 
-    // Start the animation
-    countRef.current = requestAnimationFrame(animate);
+    animationFrameRef.current = requestAnimationFrame(animate);
 
-    // Cleanup function to cancel the animation frame
     return () => {
-      if (countRef.current) {
-        cancelAnimationFrame(countRef.current);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      // Ensure sound stops if component unmounts mid-animation
+      if (hasStarted.current && onComplete) {
+        onComplete();
       }
     };
-  }, [value, duration]);
+  }, [value, duration, onStart, onComplete]);
 
-  // Render just the number, so it can be styled by its parent
   return <>{count}</>;
 };
 
 export default AnimatedNumber;
+

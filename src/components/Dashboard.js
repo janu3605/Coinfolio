@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import CoinGallery from './CoinGallery';
 import SearchBar from './SearchBar';
 import AnimatedNumber from './AnimatedNumber';
 import GlobeButton from './GlobeButton';
+import { SoundManager } from './SoundManager'; // Import the SoundManager
 
-const Dashboard = ({ stats, coins, onCoinSelect, search, setSearch, onBack, selectedCountry }) => {
+const Dashboard = ({ title, stats, coins, onCoinSelect, search, setSearch, onBack, selectedCountry }) => {
 
-  const displayedStats = React.useMemo(() => {
+  const displayedStats = useMemo(() => {
     const total = coins.reduce((sum, coin) => sum + (coin.count || 0), 0);
     const countries = selectedCountry ? 1 : stats.uniqueCountries;
     return { totalCoins: total, uniqueCountries: countries };
@@ -16,15 +17,27 @@ const Dashboard = ({ stats, coins, onCoinSelect, search, setSearch, onBack, sele
     <div className="dashboard-view">
       <GlobeButton onClick={onBack} />
       
-      {/* Title is now handled in App.js */}
+      <h1 className="dashboard-title">{title}</h1>
       
       <div className="dashboard-stats">
         <div className="stat-box">
-          <div className="stat-box-value"><AnimatedNumber value={displayedStats.totalCoins} /></div>
+          <div className="stat-box-value">
+            <AnimatedNumber 
+              value={displayedStats.totalCoins}
+              onStart={SoundManager.playCountUp}
+              onComplete={SoundManager.stopCountUp}
+            />
+          </div>
           <div className="stat-box-label">Total Coins</div>
         </div>
         <div className="stat-box">
-          <div className="stat-box-value"><AnimatedNumber value={displayedStats.uniqueCountries} /></div>
+          <div className="stat-box-value">
+            <AnimatedNumber 
+              value={displayedStats.uniqueCountries}
+              onStart={SoundManager.playCountUp}
+              onComplete={SoundManager.stopCountUp}
+            />
+          </div>
           <div className="stat-box-label">{selectedCountry ? 'Country' : 'Unique Countries'}</div>
         </div>
       </div>
