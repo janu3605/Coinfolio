@@ -1,36 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-/**
- * A component that animates a number counting up from 0 to a target value.
- * @param {object} props - The component props.
- * @param {number} props.value - The final number to count up to.
- * @param {number} [props.duration=1500] - The duration of the animation in milliseconds.
- * @param {Function} [props.onStart] - Callback function when animation starts.
- * @param {Function} [props.onComplete] - Callback function when animation completes.
- */
 const AnimatedNumber = ({ value, duration = 1500, onStart, onComplete }) => {
   const [count, setCount] = useState(0);
   const animationFrameRef = useRef(null);
-  const hasStarted = useRef(false);
+  const startTimeRef = useRef(null);
+  const hasStartedRef = useRef(false);
 
   useEffect(() => {
-    const startValue = 0;
     const endValue = parseInt(value, 10) || 0;
-    if (endValue === 0) return; // No animation needed for zero
+    
+    // Reset for new animation
+    startTimeRef.current = null;
+    hasStartedRef.current = false;
 
-    const startTime = performance.now();
-    hasStarted.current = false;
+    if (endValue === 0) {
+      setCount(0);
+      return;
+    }
 
     const animate = (currentTime) => {
-      if (!hasStarted.current) {
-        if (onStart) onStart();
-        hasStarted.current = true;
+      if (!startTimeRef.current) {
+        startTimeRef.current = currentTime;
       }
 
-      const elapsedTime = currentTime - startTime;
+      // Trigger onStart only once
+      if (!hasStartedRef.current) {
+        if (onStart) onStart();
+        hasStartedRef.current = true;
+      }
+
+      const elapsedTime = currentTime - startTimeRef.current;
       const progress = Math.min(elapsedTime / duration, 1);
       
-      const currentVal = Math.floor(progress * (endValue - startValue) + startValue);
+      // Easing function for smoother animation (optional, but nice)
+      const ease = 1 - Math.pow(1 - progress, 3); 
+      
+      const currentVal = Math.floor(progress * endValue);
       setCount(currentVal);
 
       if (progress < 1) {
@@ -49,9 +54,9 @@ const AnimatedNumber = ({ value, duration = 1500, onStart, onComplete }) => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      // Ensure sound stops if component unmounts mid-animation
-      if (hasStarted.current && onComplete) {
-        onComplete();
+      // Important: Stop sound if component unmounts before finishing
+      if (hasStartedRef.current && onComplete) {
+        onComplete(); 
       }
     };
   }, [value, duration, onStart, onComplete]);
@@ -60,4 +65,3 @@ const AnimatedNumber = ({ value, duration = 1500, onStart, onComplete }) => {
 };
 
 export default AnimatedNumber;
-

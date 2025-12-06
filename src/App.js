@@ -7,8 +7,7 @@ import SearchBar from './components/SearchBar';
 import Dashboard from './components/Dashboard';
 import AnimatedNumber from './components/AnimatedNumber';
 import CurrencyBreakdown from './components/CurrencyBreakdown';
-import { SoundManager } from './components/SoundManager'; // Import the SoundManager
-import CollectionTimeline from './components/CollectionTimeline';
+import { SoundManager } from './components/SoundManager';
 
 const countryToContinent = {
   'India': 'Asia', 'UAE': 'Asia', 'Uganda': 'Africa', 'Kenya': 'Africa',
@@ -58,15 +57,15 @@ function App() {
     setFunFact(funFacts[Math.floor(Math.random() * funFacts.length)]);
   }, []);
 
+  // Play swoosh ONLY when switching back to globe view and loading is done
   useEffect(() => {
-    if (!isLoading) {
-      const timer = setTimeout(() => {
-        setStatsAnimationReady(true);
-        if (viewMode === 'globe') {
-          SoundManager.playSwoosh();
-        }
-      }, 500); // A small delay to let the page settle
-      return () => clearTimeout(timer);
+    if (!isLoading && viewMode === 'globe') {
+       // Slight delay to sync with visual transition if any
+       const timer = setTimeout(() => {
+         SoundManager.playSwoosh();
+         setStatsAnimationReady(true);
+       }, 300);
+       return () => clearTimeout(timer);
     } else {
       setStatsAnimationReady(false);
     }
@@ -134,8 +133,7 @@ function App() {
   }
 
   const renderContent = () => {
-    switch (viewMode) {
-      case 'dashboard':
+    if (viewMode === 'dashboard') {
         return (
           <Dashboard
             title={selectedCountry ? `Coins from ${selectedCountry}` : 'Full Collection'}
@@ -148,76 +146,60 @@ function App() {
             selectedCountry={selectedCountry}
           />
         );
-      case 'globe':
-      default:
-        return (
-          <div className="globe-view">
-            <h1 className="background-title">COINFOLIO</h1>
-            <div className="globe-ui-overlay">
-              <h1>Coinfolio</h1>
-              <p>A visual journey through your personal coin collection. Click a marker to explore a country or view the entire collection.</p>
-              <div className="globe-stats">
-                <div className="stat-item">
-                  <i className="material-symbols-outlined">ev_shadow</i>
-                  <div>
-                    <div className="stat-item-value">
-                      <AnimatedNumber 
-                        value={statsAnimationReady ? collectionStats.totalCoins : 0} 
-                        duration={1000}
-                        onStart={SoundManager.playCountUp}
-                        onComplete={SoundManager.stopCountUp}
-                      />
-                    </div>
-                    <div className="stat-item-label">Total Coins</div>
-                  </div>
-                </div>
-                <div className="stat-item">
-                  <i className="material-symbols-outlined">flag</i>
-                  <div>
-                    <div className="stat-item-value">
-                      <AnimatedNumber 
-                        value={statsAnimationReady ? collectionStats.uniqueCountries : 0} 
-                        duration={1000}
-                        onStart={SoundManager.playCountUp}
-                        onComplete={SoundManager.stopCountUp}
-                      />
-                    </div>
-                    <div className="stat-item-label">Countries</div>
-                  </div>
-                </div>
-                <div className="stat-item">
-                  <i className="material-symbols-outlined">globe</i>
-                  <div>
-                    <div className="stat-item-value">
-                      <AnimatedNumber 
-                        value={statsAnimationReady ? collectionStats.uniqueContinents : 0} 
-                        duration={1000}
-                        onStart={SoundManager.playCountUp}
-                        onComplete={SoundManager.stopCountUp}
-                      />
-                    </div>
-                    <div className="stat-item-label">Continents</div>
-                  </div>
-                </div>
-              </div>
-              <div className="did-you-know">
-                <h3>Did you know?</h3>
-                <p>{funFact}</p>
-              </div>
-              <button onClick={handleShowDashboard}>Explore Full Collection</button>
-            </div>
-
-            <CollectionTimeline totalCoins={collectionStats.totalCoins} />
-
-            <CurrencyBreakdown coinCounts={coinCountsByCurrency} isVisible={statsAnimationReady} />
-            <Globe coins={coins} onCountrySelect={handleCountrySelect}/>
-          </div>
-        );
     }
+
+    // Default to globe view
+    return (
+      <div className="globe-view">
+        <h1 className="background-title">COINFOLIO</h1>
+        <div className="globe-ui-overlay">
+          <h1>Coinfolio</h1>
+          <p>A visual journey through your personal coin collection. Click a marker to explore a country or view the entire collection.</p>
+          <div className="globe-stats">
+            <div className="stat-item">
+              <i className="material-symbols-outlined">ev_shadow</i>
+              <div>
+                <div className="stat-item-value">
+                  {/* Removed onStart/onComplete to silence this specific counter */}
+                  <AnimatedNumber value={statsAnimationReady ? collectionStats.totalCoins : 0} duration={1000} />
+                </div>
+                <div className="stat-item-label">Total Coins</div>
+              </div>
+            </div>
+            <div className="stat-item">
+              <i className="material-symbols-outlined">flag</i>
+              <div>
+                <div className="stat-item-value">
+                  <AnimatedNumber value={statsAnimationReady ? collectionStats.uniqueCountries : 0} duration={1000} />
+                </div>
+                <div className="stat-item-label">Countries</div>
+              </div>
+            </div>
+            <div className="stat-item">
+              <i className="material-symbols-outlined">globe</i>
+              <div>
+                <div className="stat-item-value">
+                  <AnimatedNumber value={statsAnimationReady ? collectionStats.uniqueContinents : 0} duration={1000} />
+                </div>
+                <div className="stat-item-label">Continents</div>
+              </div>
+            </div>
+          </div>
+          <div className="did-you-know">
+            <h3>Did you know?</h3>
+            <p>{funFact}</p>
+          </div>
+          <button onClick={handleShowDashboard}>Explore Full Collection</button>
+        </div>
+        <CurrencyBreakdown coinCounts={coinCountsByCurrency} isVisible={statsAnimationReady} />
+        <Globe coins={coins} onCountrySelect={handleCountrySelect} />
+      </div>
+    );
   };
 
   return (
     <div className="App">
+      {viewMode === 'dashboard' && <div className="scrolling-coin-background"></div>}
       {renderContent()}
       <CoinDetailModal coin={selectedCoin} onClose={handleCloseModal} />
     </div>
@@ -225,4 +207,3 @@ function App() {
 }
 
 export default App;
-

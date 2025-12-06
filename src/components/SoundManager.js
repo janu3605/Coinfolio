@@ -15,20 +15,34 @@ const sounds = {
 };
 
 // Set volumes and loop properties
-sounds.swoosh.volume = 0.4;
-sounds.coinFlip.volume = 0.5;
-sounds.countUp.volume = 0.1;
+sounds.swoosh.volume = 0.4; // Slightly lower volume for swoosh
+sounds.coinFlip.volume = 0.6;
+sounds.countUp.volume = 0.2; // Lower volume for loop
 sounds.countUp.loop = true;
 
+// Preload
+Object.values(sounds).forEach(sound => {
+  sound.load();
+  // Optional: unlock audio context on user interaction if needed by browser policy
+});
+
 /**
- * Plays a sound. If the sound is already playing, it's rewound and played again.
+ * Plays a sound.
  * @param {Audio} sound - The Audio object to play.
+ * @param {boolean} forceReset - Whether to force restart the sound from 0.
  */
-const playSound = (sound) => {
-  if (sound) {
+const playSound = (sound, forceReset = true) => {
+  if (!sound) return;
+
+  // If we want to force a reset (like for coin flip), we do it.
+  // For looping sounds like countUp, we might skip this if it's already playing.
+  if (forceReset) {
     sound.currentTime = 0;
+  }
+
+  // Only play if paused or if we forced a reset
+  if (sound.paused || forceReset) {
     sound.play().catch(error => {
-      // Ignore errors that happen when the user hasn't interacted with the page yet
       if (error.name !== 'NotAllowedError') {
         console.error(`Error playing sound: ${error}`);
       }
@@ -37,8 +51,7 @@ const playSound = (sound) => {
 };
 
 /**
- * Stops a sound and rewinds it to the beginning.
- * @param {Audio} sound - The Audio object to stop.
+ * Stops a sound and rewinds it.
  */
 const stopSound = (sound) => {
   if (sound) {
@@ -47,10 +60,15 @@ const stopSound = (sound) => {
   }
 };
 
-// Export a manager object with methods to play each sound
 export const SoundManager = {
-  playSwoosh: () => playSound(sounds.swoosh),
-  playCoinFlip: () => playSound(sounds.coinFlip),
-  playCountUp: () => playSound(sounds.countUp),
+  playSwoosh: () => playSound(sounds.swoosh, true),
+  playCoinFlip: () => playSound(sounds.coinFlip, true),
+  
+  // For count up, we only start it if it's not already playing to avoid "double" sound
+  playCountUp: () => {
+    if (sounds.countUp.paused) {
+      playSound(sounds.countUp, false);
+    }
+  },
   stopCountUp: () => stopSound(sounds.countUp),
 };
