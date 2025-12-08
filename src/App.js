@@ -44,7 +44,7 @@ function App() {
   const [funFact, setFunFact] = useState('');
 
   useEffect(() => {
-    const fetchData = fetch('/coins.json')
+    const fetchData = fetch(`${process.env.PUBLIC_URL}/coins.json`)
       .then(res => res.json())
       .then(data => {
         setCoins(data);
