@@ -18,11 +18,11 @@ const countryToContinent = {
 };
 
 const countryToCurrency = {
-    'India': 'INR', 'UAE': 'AED', 'Uganda': 'UGX', 'Kenya': 'KES',
-    'Zambia': 'ZMW', 'Botswana': 'BWP', 'South Africa': 'ZAR', 'Malawi': 'MWK',
-    'Tanzania': 'TZS', 'Mozambique': 'MZN', 'USA': 'USD', 'United Kingdom': 'GBP', 
-    'Spain': 'EUR', 'Kuwait': 'KWD', 'Malaysia': 'MYR', 'Sri Lanka': 'LKR',
-    'Nepal': 'NPR', 'Thailand': 'THB', 'Pakistan': 'PKR'
+  'India': 'INR', 'UAE': 'AED', 'Uganda': 'UGX', 'Kenya': 'KES',
+  'Zambia': 'ZMW', 'Botswana': 'BWP', 'South Africa': 'ZAR', 'Malawi': 'MWK',
+  'Tanzania': 'TZS', 'Mozambique': 'MZN', 'USA': 'USD', 'United Kingdom': 'GBP',
+  'Spain': 'EUR', 'Kuwait': 'KWD', 'Malaysia': 'MYR', 'Sri Lanka': 'LKR',
+  'Nepal': 'NPR', 'Thailand': 'THB', 'Pakistan': 'PKR'
 };
 
 const funFacts = [
@@ -44,28 +44,34 @@ function App() {
   const [funFact, setFunFact] = useState('');
 
   useEffect(() => {
-    fetch('/coins.json')
+    const fetchData = fetch('/coins.json')
       .then(res => res.json())
       .then(data => {
         setCoins(data);
-        setIsLoading(false);
+        // setIsLoading(false);
       })
       .catch(error => {
         console.error("Failed to fetch coins:", error);
-        setIsLoading(false);
+        // setIsLoading(false);
       });
     setFunFact(funFacts[Math.floor(Math.random() * funFacts.length)]);
+
+    const minLoadTime = new Promise(resolve => setTimeout(resolve, 1200));
+
+    Promise.all([fetchData, minLoadTime]).then(() => {
+      setIsLoading(false);
+    });
   }, []);
 
   // Play swoosh ONLY when switching back to globe view and loading is done
   useEffect(() => {
     if (!isLoading && viewMode === 'globe') {
-       // Slight delay to sync with visual transition if any
-       const timer = setTimeout(() => {
-         SoundManager.playSwoosh();
-         setStatsAnimationReady(true);
-       }, 300);
-       return () => clearTimeout(timer);
+      // Only Trigger this when entering globe view
+      const timer = setTimeout(() => {
+        SoundManager.playSwoosh();
+        setStatsAnimationReady(true);
+      }, 300);
+      return () => clearTimeout(timer);
     } else {
       setStatsAnimationReady(false);
     }
@@ -134,18 +140,18 @@ function App() {
 
   const renderContent = () => {
     if (viewMode === 'dashboard') {
-        return (
-          <Dashboard
-            title={selectedCountry ? `Coins from ${selectedCountry}` : 'Full Collection'}
-            stats={collectionStats}
-            coins={filteredCoins}
-            onCoinSelect={handleCoinSelect}
-            search={search}
-            setSearch={setSearch}
-            onBack={handleBackToGlobe}
-            selectedCountry={selectedCountry}
-          />
-        );
+      return (
+        <Dashboard
+          title={selectedCountry ? `Coins from ${selectedCountry}` : 'Full Collection'}
+          stats={collectionStats}
+          coins={filteredCoins}
+          onCoinSelect={handleCoinSelect}
+          search={search}
+          setSearch={setSearch}
+          onBack={handleBackToGlobe}
+          selectedCountry={selectedCountry}
+        />
+      );
     }
 
     // Default to globe view
@@ -201,7 +207,7 @@ function App() {
     <div className="App">
       {viewMode === 'dashboard' && <div className="scrolling-coin-background"></div>}
       {renderContent()}
-      <CoinDetailModal coin={selectedCoin} onClose={handleCloseModal} />
+      {selectedCoin && <CoinDetailModal coin={selectedCoin} onClose={handleCloseModal} />}
     </div>
   );
 }

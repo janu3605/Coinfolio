@@ -10,17 +10,8 @@
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 2;
-  /* opacity: 1; */
-  /* transform: translateY(20px); */
-  /* animation: slideUpFadeIn 0.5s 1.5s ease-out forwards; */
 }
 
-/* @keyframes slideUpFadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-} */
 
 .breakdown-header {
   display: flex;

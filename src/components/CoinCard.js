@@ -8,7 +8,7 @@ const handleImageError = (e) => {
 const CoinCard = ({ coin, onClick }) => {
   // Helper to get the correct image URL
   const getImageUrl = (path) => {
-    if (!path) return '';
+    if (!path) return `https://placehold.co/200x200/374151/e0e7ff?text=No+Image`;
 
     // Check if it's a Google Drive link
     if (path.includes('drive.google.com')) {
@@ -22,7 +22,7 @@ const CoinCard = ({ coin, onClick }) => {
     }
 
     // If it's another full URL, return as is
-    if (path.startsWith('https') || path.startsWith('//')) {
+    if (path.includes('http') || path.startsWith('//')) {
       return path;
     }
 

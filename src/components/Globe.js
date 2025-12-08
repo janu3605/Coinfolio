@@ -19,23 +19,6 @@ const continentColors = {
 };
 
 
-// function createGradientCanvas() {
-//   const canvas = document.createElement('canvas');
-//   canvas.width = 128;
-//   canvas.height = 64;
-//   const ctx = canvas.getContext('2d');
-//   const g = ctx.createLinearGradient(0, 0, canvas.width, 0);
-//   const color1 = 'rgba(109, 231, 255, 0.8)';
-//   const color2 = 'rgba(204, 89, 194, 0.8)';
-//   g.addColorStop(0, color1);
-//   g.addColorStop(0.5, color2);
-//   g.addColorStop(1, color1);
-//   ctx.fillStyle = g;
-//   ctx.fillRect(0, 0, canvas.width, canvas.height);
-//   return canvas;
-// }
-
-
 function createGradientCanvas() {
   const canvas = document.createElement('canvas');
   canvas.width = 64;
@@ -150,4 +133,4 @@ const Globe = ({ coins, onCountrySelect }) => {
   );
 };
 
-export default Globe;
+export default React.memo(Globe);

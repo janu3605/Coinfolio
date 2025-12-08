@@ -29,7 +29,7 @@ const CoinDetailModal = ({ coin, onClose }) => {
     }
 
     // Check for other external links
-    if (path.startsWith('https') || path.startsWith('//')) {
+    if (path.includes('http') || path.startsWith('//')) {
       return path;
     }
 
