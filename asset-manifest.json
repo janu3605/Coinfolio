@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/Coinfolio/static/css/main.297e5fbb.css",
+    "main.js": "/Coinfolio/static/js/main.d03dd101.js",
+    "static/media/coin-modified-modified.png": "/Coinfolio/static/media/coin-modified-modified.dc2cd461ffb5dfd799bd.png",
+    "index.html": "/Coinfolio/index.html",
+    "main.297e5fbb.css.map": "/Coinfolio/static/css/main.297e5fbb.css.map",
+    "main.d03dd101.js.map": "/Coinfolio/static/js/main.d03dd101.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.297e5fbb.css",
+    "static/js/main.d03dd101.js"
+  ]
+}
